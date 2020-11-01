@@ -41,7 +41,7 @@
 
     <div class="text-h2 text-center q-my-lg">Uploaded photos</div>
     <div class="row">
-      <q-list class="col-6" v-for="img in images" :key="img.imageId">
+      <q-list class="col-4" v-for="img in images" :key="img.imageId">
         <q-item class="block image-border" clickable v-ripple>
           <q-item-section>
             <img :src="img.src" />
@@ -67,7 +67,7 @@
         </q-item>
       </q-list>
     </div>
-    <poster-creator></poster-creator>
+    <poster-creator :image-poster="singleImage"></poster-creator>
   </q-page>
 </template>
 

@@ -1,100 +1,108 @@
 <template>
   <q-page class="flex">
     <div class="text-h2 q-mx-auto q-my-lg">All albums</div>
-      <div>
-    <q-list class="flex" bordered padding>
-      <q-item v-ripple v-if="albums.length > 0">
-        <div class="container row">
-          <div
-            v-for="album in albums"
-            :key="album.albumId"
-            class="albums col-3 albums-list"
-          >
-            <div class="inner">
-              <div>
-                <h3>
-                  Album name: <span v-if="!isEditName">{{ album.name }}</span
-                  ><span v-else><input type="text" v-model="album.name"/></span>
-                </h3>
-
-                <button v-if="!isEditName" @click="isEditName = !isEditName">
-                  Edit album name
-                </button>
-                <button v-else @click="editNameHandler">
-                  Save Album Name
-                </button>
-              </div>
-            </div>
-
-            <!-- Posters -->
-            <h3>Posters list</h3>
-            <q-list class="flex" bordered padding>
-              <q-item v-ripple v-if="album.posters.length > 0">
-                <div class="container row">
-                  <div
-                    v-for="poster in album.posters"
-                    :key="poster.posterId"
-                    class="images col-3 poster-list"
+    <div>
+      <q-list class="flex" padding>
+        <q-item v-ripple v-if="albums.length > 0">
+          <div class="container row">
+            <div
+              v-for="album in albums"
+              :key="album.albumId"
+              class="albums col-3 albums-list"
+            >
+              <div class="inner">
+                <div>
+                  <div class="text-h4 text-center">
+                    Album: <span v-if="!isEditName">{{ album.name }}</span
+                    ><span v-else
+                      ><input type="text" v-model="album.name"
+                    /></span>
+                  </div>
+                  <div class="flex">
+                      <q-btn
+                      color="negative"
+                        class=""
+                        separator
+                        @click="deleteAlbumHandler(album.albumId)"
+                        >Delete Album</q-btn
+                      >
+                  <q-btn
+                    class="flex q-mx-auto"
+                    color="accent"
+                    v-if="!isEditName"
+                    @click="isEditName = !isEditName"
                   >
-                    <q-checkbox
-                      indeterminate-value="false"
-                      v-model="checkedPosterIds"
-                      :val="poster.posterId"
-                      @click.native="checkHandler()"
-                    />
-                    <div class="inner">
-                      <img :src="poster.imgSrc" />
-                      <div class="lable">
-                        <label>{{ poster.title }}</label>
-                        <label>{{ poster.subtitle }}</label>
+                    Edit album name
+                  </q-btn>
+
+                  <q-btn
+                    class="text-center"
+                    color="secondary"
+                    v-else
+                    @click="editNameHandler"
+                  >
+                    Save Album Name
+                  </q-btn>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Posters -->
+              <q-list class="flex" padding>
+                <q-item v-ripple v-if="album.posters.length > 0">
+                  <div class="container row">
+                    <div
+                      v-for="poster in album.posters"
+                      :key="poster.posterId"
+                      class="images col-3 poster-list"
+                    >
+                      <q-checkbox
+                        indeterminate-value="false"
+                        v-model="checkedPosterIds"
+                        :val="poster.posterId"
+                        @click.native="checkHandler()"
+                      />
+                      <div class="inner">
+                        <img :src="poster.imgSrc" />
+                        <div class="lable text-center">
+                          <label>{{ poster.title }}</label>
+                          <label>{{ poster.subtitle }}</label>
+                        </div>
                       </div>
-                    </div>
-                    <div class="text">
-                      <div class="button">
-                        <button
-                          class=""
-                          separator
-                          @click="editPosterHandler(album.albumId)"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          @click="deletePosterHandler(album, poster.posterId)"
-                          class=""
-                          separator
-                        >
-                          Delete
-                        </button>
+                      <div class="text">
+                        <div class="button flex space">
+                          <q-btn
+                            color="accent"
+                            class=""
+                            separator
+                            @click="editPosterHandler(album.albumId)"
+                            >Edit</q-btn
+                          >
+                          <q-btn
+                            color="negative"
+                            @click="deletePosterHandler(album, poster.posterId)"
+                            class=""
+                            separator
+                            >Delete</q-btn
+                          >
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </q-item>
-              <q-item v-else>No posters found</q-item>
+                </q-item>
+                <q-item v-else>No posters found</q-item>
 
-              <q-separator spaced />
-            </q-list>
-            <!-- End posters -->
-
-            <div class="text">
-              <div class="button">
-                <button
-                  class=""
-                  separator
-                  @click="deleteAlbumHandler(album.albumId)"
-                >
-                  Delete
-                </button>
-              </div>
+                <q-separator spaced />
+              </q-list>
+              <!-- End posters -->
             </div>
           </div>
-        </div>
-      </q-item>
-      <q-item v-else>No posters found</q-item>
+        </q-item>
+        <q-item v-else>No posters found</q-item>
 
-      <q-separator spaced />
-    </q-list>
-  </div>
+        <q-separator spaced />
+      </q-list>
+    </div>
   </q-page>
 </template>
 
@@ -182,6 +190,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.space {
+  justify-content: space-around;
+}
 .albums {
   width: 100%;
   height: auto;
@@ -190,17 +201,17 @@ export default {
 .poster-list {
   border: 1px solid black;
   padding: 5px;
+  border-radius: 5px;
 }
 .poster-list img {
   width: 100%;
   height: auto;
 }
 .lable {
-  position: absolute;
-  background-color: tomato;
-  width: 24%;
-  margin-top: -4rem;
-  height: 50px;
+    background-color: tomato;
+    width: 23%;
+    margin-top: -4rem;
+    height: 50px;
 }
 .lable {
   position: absolute;

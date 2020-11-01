@@ -6,9 +6,10 @@
           <div
             v-for="poster in posters"
             :key="poster.posterId"
-            class="images col-3 poster-list"
+            class="images col-4 poster-list"
           >
             <label>Select image</label>
+            
             <q-checkbox
               indeterminate-value="false"
               v-model="checkedPosterIds"
@@ -24,20 +25,22 @@
             </div>
             <div class="text">
               <div class="button">
-                <button
+                <q-btn
+                color="accent"
                   @click="editPosterHandler(poster.posterId)"
                   class=""
                   separator
                 >
                   Edit
-                </button>
-                <button
+                </q-btn>
+                <q-btn
+                color="negative"
                   @click="deletePosterHandler(poster.posterId)"
                   class=""
                   separator
                 >
                   Delete
-                </button>
+                </q-btn>
               </div>
             </div>
           </div>
@@ -110,14 +113,17 @@ export default {
   height: auto;
 }
 .lable {
-  position: absolute;
-  background-color: tomato;
-  width: 24%;
-  margin-top: -4rem;
-  height: 50px;
+    background-color: tomato;
+    width: 31%;
+    margin-top: -4rem;
+    height: 50px;
 }
 .lable {
   position: absolute;
   display: grid;
+}
+.button {
+    display: flex;
+    justify-content: space-around;
 }
 </style>

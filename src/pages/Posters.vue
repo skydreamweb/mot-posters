@@ -1,28 +1,32 @@
 <template>
   <q-page>
-    <div class="text-h2 q-mx-auto q-my-lg">Create album</div>
+    <div class="text-h2 text-center q-mx-auto q-my-lg">Create album</div>
+    <p class="text-center">Please select images and then enter album</p>
     <div class="albums">
       <div>
         <q-input
+          outlined
+          rounded
+          class="input-width q-mx-auto"
           type="text"
           placeholder="Enter album name"
           v-model="albumName"
         />
-        <q-btn color="secondary" @click="createAlbumHandler">Create album</q-btn>
+        <q-btn color="secondary q-mt-sm" rounded @click="createAlbumHandler">Create album</q-btn>
       </div>
-      <q-list class="flex" bordered padding>
+      <q-list class="flex row" padding>
         <q-separator spaced />
 
         <template v-if="albums.length > 0">
-          <q-item v-ripple v-for="album in albums" :key="album.albumId">
-            <q-item-section side top>
-              <button @click="deleteAlbumHandler(album.albumId)">Delete</button>
-            </q-item-section>
-
+          <q-item class="block col-3 bordered q-ma-sm" v-ripple v-for="album in albums" :key="album.albumId">
             <q-item-section>
-              <q-item-label>{{ album.name }}</q-item-label>
+              <q-item-label class="text-h4 text-center">{{ album.name }}</q-item-label>
             </q-item-section>
-          </q-item></template
+            <q-item-section side top>
+              <q-btn color="negative" rounded @click="deleteAlbumHandler(album.albumId)">Delete</q-btn>
+            </q-item-section>
+          </q-item>
+          </template
         >
         <q-item v-else>No albums found.</q-item>
 
@@ -58,7 +62,7 @@ export default {
         alert("Please select posters first!");
         return;
       }
-      // set unique album id
+      // Set unique album ID
       let albumId = 1;
       let albums = JSON.parse(this.$q.localStorage.getItem("albums"))
         ? JSON.parse(this.$q.localStorage.getItem("albums"))
@@ -67,7 +71,7 @@ export default {
         albumId = Number(albums[albums.length - 1].albumId) + 1;
       }
 
-      // create new album
+      // Create new album
       const album = {
         albumId,
         name: this.albumName,
@@ -76,20 +80,20 @@ export default {
 
       this.albums.push(album);
 
-      // update in localstorage
+      // Update in localstorage
       this.$q.localStorage.remove("albums");
-      this.$q.localStorage.setItem("albums", JSON.stringify(this.albums));
+      this.$q.localStorage.set("albums", JSON.stringify(this.albums));
 
-      // reset data
+      // Reset data
       this.selectedPosters = [];
       this.albumName = "";
     },
     deleteAlbumHandler(albumId) {
       if (confirm("Are you sure that you want to delete selected album?")) {
-        // remove selected albums
+        // Remove selected albums
         this.albums = this.albums.filter(album => album.albumId !== albumId);
 
-        // update in localstorage
+        // Update in localstorage
         this.$q.localStorage.remove("albums");
         this.$q.localStorage.set("albums", JSON.stringify(this.albums));
       }
@@ -108,6 +112,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.bordered {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+.input-width {
+  max-width: 400px;
+}
 .albums {
   display: block;
   margin: 0 auto;

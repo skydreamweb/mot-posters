@@ -1,11 +1,35 @@
+import { LocalStorage } from "quasar";
+
 const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "/", component: () => import("pages/Index.vue") },
-      { path: "/albums", component: () => import("pages/Albums.vue") },
-      { path: "/posters", component: () => import("pages/Posters.vue") },
+      {
+        path: "/posters",
+        name: "posters",
+        component: () => import("pages/Posters.vue")
+      },
+      { path: "", component: () => import("pages/Index.vue") },
+      {
+        path: "/albums",
+        name: "albums",
+        component: () => import("pages/Albums.vue")
+      },
+      {
+        path: "/poster/:posterId",
+        name: "edit-poster",
+        component: () => import("components/PosterCreator.vue"),
+        props: true,
+        beforeEnter(to, from, next) {
+          to.params.editPoster = JSON.parse(
+            LocalStorage.getItem("posters")
+          ).find(
+            poster => Number(poster.posterId) === Number(to.params.posterId)
+          );
+          next();
+        }
+      }
     ]
   },
 

@@ -9,60 +9,58 @@
       style="max-width: 300px"
     >
       <q-file
-        clearable
+         clearable
         multiple
         filled
         color="purple-12"
-        v-model="allImages"
+        v-model="image"
         max-file-size="1048576"
         label="Upload image"
-        @change="imageUpload"
       />
-       <q-btn push color="teal" label="Add image" @click="addImage" />
+      <q-btn push color="teal" label="Add image" @click="addImage" />
     </div>
-    <button @click="check">Check</button>
   </q-page>
 </template>
 
 <script>
+import { getLSData } from "src/helpers/helperFunctions";
+
 export default {
   name: "PageIndex",
   data() {
     return {
-      allImages: []
+      image: null, // q-file v-modal
+      images: [] // LocalStorage array
     };
   },
   methods: {
-    check() {
-      console.log(this.image);
-    },
-    imageUpload() {
-      console.log("radi");
-    },
-    addImage(event){
+    addImage() {
+
+      // FileReader read the contents of files 
       const reader = new FileReader();
+      reader.addEventListener("load", () => {
 
-      reader.addEventListener("click", () => {
-
-        // Create unique name and id
+        // Get next ID
         let imageId = 1;
-        let images = JSON.parse(this.$q.localStorage.getItem("images"));
-
-        // random number for id
-        if (images && images.length > 0) {
-          imageId = Number(images[images.length - 1].imageId) + 1;
+        if (this.images.length > 0) {
+          imageId = Number(this.images[this.images.length - 1].imageId) + 1;
         }
-        console.log(this.allImages);
 
-        // push image in state to array
-        this.allImages.push({ imageId, src: reader.result });
-        
-        // place array in localstorage
-        this.$q.localStorage.set("images", JSON.stringify(this.allImages));
+        // Push image in state to array
+        this.images.push({ imageId, src: reader.result });
+
+        // Place array in localstorage
+        this.$q.localStorage.remove("images");
+        this.$q.localStorage.set("images", JSON.stringify(this.images));
       });
-      reader.readAsDataURL(event.target.files[0]);
-      console.log("Added");
+      // Read imagea
+      reader.readAsDataURL(this.image[0]);
+
+      // Remove image from q-file
+      this.image = null;
     }
+  }, mounted(){
+     this.images = getLSData("images");
   }
 };
 </script>

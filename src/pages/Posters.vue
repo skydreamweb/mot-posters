@@ -59,7 +59,9 @@ export default {
     },
     createAlbumHandler() {
       if (this.selectedPosters.length === 0) {
-        alert("Please select posters first!");
+        this.$q.dialog({
+            title: "Please select images first"
+        });
         return;
       }
       // Set unique album ID
@@ -89,14 +91,15 @@ export default {
       this.albumName = "";
     },
     deleteAlbumHandler(albumId) {
-      if (confirm("Are you sure that you want to delete selected album?")) {
+        this.$q.dialog({
+            title: "Album has been deleted"
+        });
         // Remove selected albums
         this.albums = this.albums.filter(album => album.albumId !== albumId);
 
         // Update in localstorage
         this.$q.localStorage.remove("albums");
         this.$q.localStorage.set("albums", JSON.stringify(this.albums));
-      }
     }
   },
   mounted() {
